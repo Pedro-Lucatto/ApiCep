@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: apicep
-          image: yourdockerhubusername/apicep:latest
+          image: pedrolucatto18/apicep:latest
           ports:
             - containerPort: 8000
 ---
