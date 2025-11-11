@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apicep-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: apicep
+  template:
+    metadata:
+      labels:
+        app: apicep
+    spec:
+      containers:
+        - name: apicep
+          image: yourdockerhubusername/apicep:latest
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apicep-service
+spec:
+  selector:
+    app: apicep
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer

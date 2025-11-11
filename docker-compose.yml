@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  api:
+    build: .
+    container_name: apicep_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=example
+      - DB_NAME=busca_by_cep
+
+  db:
+    image: mysql:8.0
+    container_name: apicep_db
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: busca_by_cep
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

@@ -30,7 +30,13 @@ abstract class Controller
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Pragma: public");
 
-        exit(json_encode($data));
+        // Converte o dado (que pode ser um objeto ou array) para um array
+        $response_array = json_decode(json_encode($data), true);
+
+        // Adiciona o nome do pod/container à resposta
+        $response_array['served_by_pod'] = getenv('HOSTNAME') ?: gethostname();
+
+        exit(json_encode($response_array));
     }
 
     /**
@@ -39,6 +45,9 @@ abstract class Controller
     protected static function setResponseAsJSON($data, $request_status = true)
     {
         $response = array('response_data' => $data, 'response_successful' => $request_status);
+
+        // Adiciona o nome do pod/container à resposta
+        $response['served_by_pod'] = getenv('HOSTNAME') ?: gethostname();
 
         header("Access-Control-Allow-Origin: *");
         header("Content-type: application/json; charset=utf-8");
@@ -51,8 +60,7 @@ abstract class Controller
 
 
     /**
-     * 
-     */
+     * */
     protected static function getExceptionAsJSON(Exception $e)
     {
         $exception = [
@@ -63,6 +71,9 @@ abstract class Controller
             'traceAsString' => $e->getTraceAsString(), 
             'previous' => $e->getPrevious()
         ];
+
+        // Adiciona o nome do pod/container à resposta de erro
+        $exception['served_by_pod'] = getenv('HOSTNAME') ?: gethostname();
         
         http_response_code(400);
 
@@ -77,8 +88,7 @@ abstract class Controller
 
 
     /**
-     * 
-     */
+     * */
     protected static function isGet()
     {
         if($_SERVER['REQUEST_METHOD'] !== 'GET')
@@ -87,8 +97,7 @@ abstract class Controller
 
 
     /**
-     * 
-     */
+     * */
     protected static function isPost()
     {
         if($_SERVER['REQUEST_METHOD'] !== 'POST')
@@ -97,8 +106,7 @@ abstract class Controller
 
 
     /**
-     * 
-     */
+     * */
     protected static function getIntFromUrl($var_get, $var_name = null) : int
     {
         self::isGet();
@@ -111,8 +119,7 @@ abstract class Controller
 
     
     /**
-     * 
-     */
+     * */
     protected static function getStringFromUrl($var_get, $var_name = null) : string
     {
         self::isGet();
