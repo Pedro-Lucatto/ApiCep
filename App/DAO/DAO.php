@@ -40,8 +40,9 @@ abstract class DAO extends PDO
             $user = getenv('DB_USER');
             $pass = getenv('DB_PASS');
 
-            // DSN (Data Source Name) - CORREÇÃO: Adicionando a porta explicitamente para forçar a conexão TCP/IP
-            $dsn = "mysql:host=" . $host . ";port=3306;dbname=" . $db_name;
+            // CORREÇÃO FINAL: Inclui a porta (3306) diretamente no host para forçar a conexão TCP/IP,
+            // resolvendo o erro de socket no Kubernetes/Docker.
+            $dsn = "mysql:host=" . $host . ":3306;dbname=" . $db_name;
             
             // Criando a conexão
             $this->conexao = new PDO($dsn, $user, $pass, $options);
