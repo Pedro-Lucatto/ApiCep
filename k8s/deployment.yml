@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apicep-deployment
+  labels:
+    app: apicep
 spec:
   replicas: 2
   selector:
@@ -15,8 +17,19 @@ spec:
       containers:
         - name: apicep
           image: pedrolucatto18/apicep:latest
+          # Adicionando esta linha para garantir que a imagem mais recente seja sempre puxada
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
+          environment:
+            - name: DB_HOST
+              value: "apicep-db-service"
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASS
+              value: "example"
+            - name: DB_NAME
+              value: "busca_by_cep"
 ---
 apiVersion: v1
 kind: Service
