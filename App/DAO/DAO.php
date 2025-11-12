@@ -34,14 +34,14 @@ abstract class DAO extends PDO
             ];
 
 
-            // Pegando as variáveis de ambiente que o Docker-Compose enviou
+            // Pegando as variáveis de ambiente que o Docker-Compose/Kubernetes enviou
             $host = getenv('DB_HOST');
             $db_name = getenv('DB_NAME');
             $user = getenv('DB_USER');
             $pass = getenv('DB_PASS');
 
-            // DSN (Data Source Name)
-            $dsn = "mysql:host=" . $host . ";dbname=" . $db_name;
+            // DSN (Data Source Name) - CORREÇÃO: Adicionando a porta explicitamente para forçar a conexão TCP/IP
+            $dsn = "mysql:host=" . $host . ";port=3306;dbname=" . $db_name;
             
             // Criando a conexão
             $this->conexao = new PDO($dsn, $user, $pass, $options);
